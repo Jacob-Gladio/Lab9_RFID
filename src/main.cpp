@@ -6,10 +6,25 @@
 // Global variables
 #define RFID_SS   5
 #define RFID_RST  22
+String authorizedUIDs[] = {"53 24 0F 56"};
+int numAuthorized = 1;
+
 
 MFRC522 rfid(RFID_SS, RFID_RST);
 
 // Functions
+bool isAuthorized(String uid)
+{
+  for (int i = 0; i < numAuthorized; i++)
+  {
+    if (uid == authorizedUIDs[i])
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
 
 // getUID() turns the card's UID bytes into text, for example "4A 1F 9C 02"
 String getUID()
@@ -54,6 +69,15 @@ void loop()
     String uid = getUID();
     Serial.print("Card UID: ");
     Serial.println(uid);
+
+    if (isAuthorized(uid) == true)
+    {
+      Serial.println("ACCESS GRANTED");
+    }
+    else
+    {
+      Serial.println("ACCESS DENIED");
+    }
 
     rfid.PICC_HaltA();
   }
