@@ -4,8 +4,8 @@
 #include <MFRC522.h>
 
 // Global variables
-#define RFID_SS   ___
-#define RFID_RST  ___
+#define RFID_SS   5
+#define RFID_RST  22
 
 MFRC522 rfid(RFID_SS, RFID_RST);
 
@@ -49,6 +49,14 @@ void setup()
 void loop()
 {
   // Card detection
+  if (rfid.PICC_IsNewCardPresent() == true && rfid.PICC_ReadCardSerial() == true)
+  {
+    String uid = getUID();
+    Serial.print("Card UID: ");
+    Serial.println(uid);
+
+    rfid.PICC_HaltA();
+  }
 
   // Timer
 }
